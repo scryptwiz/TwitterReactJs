@@ -2,7 +2,7 @@
 module.exports = {
   content: ["./src/**/*.{html,js,jsx}"],
   theme: {
-    darkMode: ['class', '[data-mode="dark"]'],
+    darkMode: 'class',
     extend: {
       colors:{
         twitter: '#00ADED',

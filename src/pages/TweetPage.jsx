@@ -1,11 +1,15 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import jwt_decode from 'jwt-decode'
 import { useDispatch, useSelector } from 'react-redux'
 import Sidebar from '../components/Sidebar';
 import Feed from '../components/Feed';
 import Widget from '../components/Widget';
+import { MoonIcon, SunIcon } from "@heroicons/react/outline";
+import useTheme from '../hooks/useTheme';
 
 const TweetPage = () => {
+    const [ nextTheme, setTheme ] = useTheme()
+    const [toggle] = useState(false)
     const dispatch = useDispatch();
     const userCredentials = useSelector(state=>state.user);
 
@@ -28,6 +32,7 @@ const TweetPage = () => {
             document.getElementById('signInDiv'),
             { theme: "outline", size: "large" }
         )
+        // eslint-disable-next-line
     }, [])
 
     const signOut = () => {
@@ -50,11 +55,18 @@ const TweetPage = () => {
             <div className='grid grid-cols-9  w-full max-w-5xl mx-auto h-screen overflow-hidden'>
                 <div className='col-span-2 overflow-y-auto flex flex-col items-center border-r border-gray-500 h-screen justify-between'>
                     <Sidebar/>
-                    <div className="flex items-center gap-2 px-3 cursor-pointer rounded-full hover:bg-gray-700  dark:hover:bg-gray-200 dark:hover:bg-opacity-10 hover:bg-opacity-20 transition-all duration-200 py-2 group max-w-fit mb-5" onClick={signOut}>
-                        <img src={userCredentials.picture} referrerPolicy="no-referrer" className='w-7 h-7 rounded-full object-cover' alt="ProfileImage"/>
-                        <div className='flex flex-col'>
-                            <p className="group-hover:text-twitter dark:group-hover:text-white lg:inline-flex hidden font-medium">{userCredentials.name}</p>
-                            <p className="group-hover:text-twitter dark:group-hover:text-white lg:inline-flex hidden font-light text-xs">@{userCredentials.name.replace(/\$+/g, '').toLocaleLowerCase()}</p>
+                    <div className='w-full flex-col items-center lg:items-start flex mb-5'>
+                        <div className="flex w-fit mx-auto">
+                            <span className='px-5 flex gap-2 items-center capitalize text-gray-400'>
+                                {toggle?<SunIcon onClick={()=>setTheme(nextTheme)} className="w-7 h-7 dark:bg-green-600"/>:<MoonIcon onClick={()=>setTheme(nextTheme)} className="w-7 h-7 dark:bg-green-600"/>}
+                            </span>
+                        </div>
+                        <div className="flex items-center gap-2 px-3 cursor-pointer rounded-full hover:bg-gray-700  dark:hover:bg-gray-200 dark:hover:bg-opacity-10 hover:bg-opacity-20 transition-all duration-200 py-2 group max-w-fit mx-auto" onClick={signOut}>
+                            <img src={userCredentials.picture} referrerPolicy="no-referrer" className='w-7 h-7 rounded-full object-cover' alt="ProfileImage"/>
+                            <div className='flex flex-col w-fit'>
+                                <p className="group-hover:text-twitter dark:group-hover:text-white lg:inline-flex hidden font-medium">{userCredentials.name}</p>
+                                <p className="group-hover:text-twitter dark:group-hover:text-white lg:inline-flex hidden font-light text-xs">@{userCredentials.name.replace(/\$+/g, '').toLocaleLowerCase()}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
