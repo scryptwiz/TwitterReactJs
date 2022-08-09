@@ -1,6 +1,9 @@
-import React, { useEffect    } from 'react'
+import { useEffect } from 'react'
 import jwt_decode from 'jwt-decode'
 import { useDispatch, useSelector } from 'react-redux'
+import Sidebar from '../components/Sidebar';
+import Feed from '../components/Feed';
+import Widget from '../components/Widget';
 
 const TweetPage = () => {
     const dispatch = useDispatch();
@@ -18,7 +21,7 @@ const TweetPage = () => {
         }
         /* global google*/
         google.accounts.id.initialize({
-            client_id: "573049742864-i43fg12j4njg9moncpscc6u70upqunnn.apps.googleusercontent.com",
+            client_id: `${process.env.REACT_APP_GOOGLE_CLIENT_ID}`,
             callback: handleCallbackResponse
         })
         google.accounts.id.renderButton(
@@ -43,9 +46,20 @@ const TweetPage = () => {
         )
       }
     return (
-        <div className='w-full h-screen bg-black'>
-            <div className='mx-auto h-full w-full lg:max-w-5xl border-x border-gray-600'>
-                <button onClick={signOut}>signout</button>
+        <div className='w-full flex bg-gray-200 dark:bg-black'>
+            <div className='grid grid-cols-9  w-full max-w-5xl mx-auto h-screen overflow-hidden'>
+                <div className='col-span-2 overflow-y-auto flex flex-col items-center border-r border-gray-500 h-screen justify-between'>
+                    <Sidebar/>
+                    <div className="flex items-center gap-2 px-3 cursor-pointer rounded-full hover:bg-gray-700  dark:hover:bg-gray-200 dark:hover:bg-opacity-10 hover:bg-opacity-20 transition-all duration-200 py-2 group max-w-fit mb-5" onClick={signOut}>
+                        <img src={userCredentials.picture} referrerPolicy="no-referrer" className='w-7 h-7 rounded-full object-cover' alt="ProfileImage"/>
+                        <div className='flex flex-col'>
+                            <p className="group-hover:text-twitter dark:group-hover:text-white lg:inline-flex hidden font-medium">{userCredentials.name}</p>
+                            <p className="group-hover:text-twitter dark:group-hover:text-white lg:inline-flex hidden font-light text-xs">@{userCredentials.name.replace(/\$+/g, '').toLocaleLowerCase()}</p>
+                        </div>
+                    </div>
+                </div>
+                <Feed/>
+                <Widget/>
             </div>
         </div>
     )
