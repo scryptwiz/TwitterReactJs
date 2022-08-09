@@ -51,9 +51,9 @@ const TweetPage = () => {
         )
       }
     return (
-        <div className='w-full flex bg-gray-200 dark:bg-black'>
-            <div className='grid grid-cols-9  w-full max-w-5xl mx-auto h-screen overflow-hidden'>
-                <div className='col-span-2 overflow-y-auto flex flex-col items-center border-r border-gray-500 h-screen justify-between'>
+        <div className='w-full flex bg-white dark:bg-black'>
+            <div className='grid grid-cols-9  w-full max-w-6xl mx-auto h-screen overflow-hidden'>
+                <div className='col-span-2 overflow-y-auto flex flex-col items-center border-r border-gray-200 h-screen justify-between'>
                     <Sidebar/>
                     <div className='w-full flex-col items-center lg:items-start flex mb-5'>
                         <div className="flex w-fit mx-auto">
