@@ -1,10 +1,11 @@
 import { CalendarIcon, EmojiHappyIcon, LinkIcon, LocationMarkerIcon, PhotographIcon, XCircleIcon } from "@heroicons/react/outline"
 import { useRef, useState } from "react"
-import { useSelector } from "react-redux";
-import { addDoc, collection } from 'firebase/firestore'
+import { useDispatch, useSelector } from "react-redux";
+import { addDoc, collection, getDocs, orderBy, query, serverTimestamp } from 'firebase/firestore'
 import { db } from "../lib/firebase";
 
 const TweetBox = () => {
+    const dispatch = useDispatch()
     const [tweet, setTweet] = useState('')
     const userCredentials = useSelector(state=>state.user);
     const [imageUrlBox, setImageUrlBox] = useState(false)
@@ -28,10 +29,17 @@ const TweetBox = () => {
           setImage(readerEvent.target.result);
         };
     }
-    const postTweet = () => {
+    const postTweet = async () => {
         const tweets = collection(db, 'tweets');
-        addDoc(tweets, {tweet, image, profileImg:userCredentials.picture, username:userCredentials.name}).then(response=>{
-            console.log(response)
+        addDoc(tweets, {tweet, image, profileImg:userCredentials.picture, username:userCredentials.name, comments:[], timestamp: serverTimestamp()}).then(response=>{
+            const tweetRef = query(collection(db, 'tweets'),orderBy('timestamp','desc'))
+            getDocs(tweetRef).then(response=>{
+              const tweet = response.docs.map(doc=>({
+                data: doc.data(),
+                id: doc.id,
+              }))
+              dispatch({type:"SET_TWEETS", payload:tweet})
+            }).catch(error=>console.log(error.message))
         }).catch(error=>{
             console.log(error)
         })
@@ -49,7 +57,7 @@ const TweetBox = () => {
         <img src={userCredentials.picture} referrerPolicy="no-referrer" className="mt-4 h-14 w-14 rounded-full object-cover" alt="profile logo"/>
         <div className='flex flex-1 items-center pl-2'>
           <form className='flex flex-col flex-1'>
-            <textarea type="text" value={tweet} onChange={(e)=>setTweet(e.target.value)} placeholder="What's Happening" className='w-full resize-none h-32 text-lg outline-none bg-transparent font-light'/>
+            <textarea type="text" value={tweet} onChange={(e)=>setTweet(e.target.value)} placeholder="What's Happening" className='w-full resize-none text-lg outline-none bg-transparent font-light'/>
             {imageUrlBox && (
               <form  className='mt-5 flex rounded-lg bg-twitter/80 py-2 px-4'>
                 <input ref={imageInputRef}  type="text" placeholder='Enter Imgae url...' className='flex-1 bg-transparent p-2 text-white outline-none placeholder:text-white'  />

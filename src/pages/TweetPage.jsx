@@ -6,12 +6,15 @@ import Feed from '../components/Feed';
 import Widget from '../components/Widget';
 import { MoonIcon, SunIcon } from "@heroicons/react/outline";
 import useTheme from '../hooks/useTheme';
+import { collection, getDocs, orderBy, query } from "firebase/firestore"
+import { db } from "../lib/firebase"
 
 const TweetPage = () => {
     const [ nextTheme, setTheme ] = useTheme()
     const [toggle] = useState(false)
     const dispatch = useDispatch();
     const userCredentials = useSelector(state=>state.user);
+    const [loader, setLoader] = useState(false)
 
     const handleCallbackResponse = (response) =>{
         dispatch({type:'SET_USER', payload:jwt_decode(response.credential)})
@@ -19,6 +22,7 @@ const TweetPage = () => {
     }
     
     useEffect(() => {
+        setLoader(true)
         const user = sessionStorage.getItem("Cerdentials")
         if (user) {
             dispatch({type:'SET_USER', payload:jwt_decode(user)})
@@ -33,7 +37,16 @@ const TweetPage = () => {
             { theme: "outline", size: "large" }
         )
         // eslint-disable-next-line
-    }, [])
+        const tweetRef = query(collection(db, 'tweets'),orderBy('timestamp','desc'))
+        getDocs(tweetRef).then(response=>{
+        const tweet = response.docs.map(doc=>({
+            data: doc.data(),
+            id: doc.id,
+        }))
+        dispatch({type:"SET_TWEETS", payload:tweet})
+        setLoader(false)
+        }).catch(error=>console.log(error.message))
+    }, [dispatch])
 
     const signOut = () => {
         sessionStorage.removeItem('Cerdentials');
@@ -52,6 +65,9 @@ const TweetPage = () => {
       }
     return (
         <div className='w-full flex bg-white dark:bg-black'>
+            {loader&&(<div className='w-full h-screen fixed top-0 left-0 flex justify-center items-center bg-white z-40 dark:bg-black'>
+                <img src="/logo.png" alt="Logo" className='w-32 animate-pulse'/>
+            </div>)}
             <div className='grid grid-cols-9  w-full max-w-6xl mx-auto h-screen overflow-hidden'>
                 <div className='col-span-2 overflow-y-auto flex flex-col items-center border-r border-gray-200 h-screen justify-between'>
                     <Sidebar/>
