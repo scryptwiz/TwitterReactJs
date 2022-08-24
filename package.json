@@ -57,6 +57,7 @@
     ]
   },
   "devDependencies": {
+    "install-peers": "^1.0.4",
     "tailwindcss": "^3.1.8"
   }
 }
