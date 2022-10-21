@@ -13,7 +13,7 @@ const Sidebar = () => {
         <SidebarRow Icon={CollectionIcon} title='Lists'/>
         <SidebarRow Icon={UserIcon} title='Profile'/>
         <SidebarRow Icon={DotsCircleHorizontalIcon} title='More'/>
-        <button className='px-3 py-3 rounded-full bg-blue-400 w-fit font-semibold text-xl transition-all duration-200 hover:bg-twitter text-white lg:hidden inline'><TrendingUpIcon className='w-5 h-5'/></button>
+        <button className='px-3 py-3 rounded-full bg-blue-400 w-fit font-semibold text-xl transition-all duration-200 hover:bg-twitter  text-white lg:hidden inline'><TrendingUpIcon className='w-5 h-5'/></button>
         <button className='px-4 py-2 rounded-full bg-blue-400 w-full font-semibold text-xl transition-all duration-200 hover:bg-twitter text-white hidden lg:inline'>Tweet</button>
     </div>
   )

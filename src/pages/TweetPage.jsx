@@ -5,13 +5,10 @@ import Sidebar from '../components/Sidebar';
 import Feed from '../components/Feed';
 import Widget from '../components/Widget';
 import { MoonIcon, SunIcon } from "@heroicons/react/outline";
-import useTheme from '../hooks/useTheme';
 import { collection, getDocs, orderBy, query } from "firebase/firestore"
 import { db } from "../lib/firebase"
 
 const TweetPage = () => {
-    const [ nextTheme, setTheme ] = useTheme()
-    const [toggle] = useState(false)
     const dispatch = useDispatch();
     const userCredentials = useSelector(state=>state.user);
     const [loader, setLoader] = useState(false)
@@ -22,6 +19,12 @@ const TweetPage = () => {
     }
     
     useEffect(() => {
+        // localStorage.setItem('theme', "dark")
+        document.documentElement.classList.add('dark')
+        // if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        //   } else {
+        //     document.documentElement.classList.remove('dark')
+        // }
         setLoader(true)
         const user = sessionStorage.getItem("Cerdentials")
         if (user) {
@@ -74,7 +77,7 @@ const TweetPage = () => {
                     <div className='w-full flex-col items-center lg:items-start flex mb-5'>
                         <div className="flex w-fit mx-auto">
                             <span className='px-5 flex gap-2 items-center capitalize text-gray-400'>
-                                {toggle?<SunIcon onClick={()=>setTheme(nextTheme)} className="w-7 h-7 dark:bg-green-600"/>:<MoonIcon onClick={()=>setTheme(nextTheme)} className="w-7 h-7 dark:bg-green-600"/>}
+
                             </span>
                         </div>
                         <div className="flex items-center gap-2 px-3 cursor-pointer rounded-full hover:bg-gray-700  dark:hover:bg-gray-200 dark:hover:bg-opacity-10 hover:bg-opacity-20 transition-all duration-200 py-2 group max-w-fit mx-auto" onClick={signOut}>
